@@ -8,6 +8,10 @@ else()
   set_property(TARGET pmp PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
+target_include_directories(
+  pmp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
+             $<INSTALL_INTERFACE:include/>)
+
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
   target_link_libraries(pmp PUBLIC OpenMP::OpenMP_CXX)
@@ -20,10 +24,6 @@ if(WITH_CLANG_TIDY)
 endif()
 
 if(NOT EMSCRIPTEN AND PMP_INSTALL)
-
-  target_include_directories(
-    pmp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
-               $<INSTALL_INTERFACE:include/>)
 
   if((UNIX OR APPLE) AND CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(pmp PUBLIC "-std=c++11")
